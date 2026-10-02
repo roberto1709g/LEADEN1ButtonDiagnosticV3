@@ -1,8 +1,11 @@
-plugins { id 'com.android.application' }
+plugins { 
+    id 'com.android.application' 
+}
 
 android {
     namespace 'com.leaden1.buttondiagnostic'
     compileSdk 35
+
     defaultConfig {
         applicationId 'com.leaden1.buttondiagnostic'
         minSdk 23
@@ -10,9 +13,25 @@ android {
         versionCode 3
         versionName '3.0'
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
 }
 
 dependencies {
+    // Sincronización de dependencias de Kotlin para eliminar clases duplicadas
+    implementation platform('org.jetbrains.kotlin:kotlin-bom:1.8.22')
+    constraints {
+        implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.22") {
+            because("evitar errores de clases duplicadas")
+        }
+        implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.22") {
+            because("evitar errores de clases duplicadas")
+        }
+    }
+
     implementation 'androidx.appcompat:appcompat:1.7.0'
-    implementation 'androidx.core:core:1.15.0'
+    implementation 'androidx.media:media:1.7.0'
 }
