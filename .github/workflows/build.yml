@@ -1,0 +1,55 @@
+name: Build APK V3
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  build:
+    name: Compilar LEADEN1ButtonDiagnostic V3
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar código del repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Configurar Gradle 8.7
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.7'
+
+      - name: Verificar estructura del proyecto
+        run: |
+          echo "=== ESTRUCTURA DEL PROYECTO ==="
+          ls -la
+          echo "=== CARPETA APP ==="
+          ls -la app
+          echo "=== ARCHIVOS JAVA ==="
+          find app/src -type f | sort
+
+      - name: Compilar APK Debug V3
+        run: |
+          gradle :app:assembleDebug --stacktrace
+
+      - name: Verificar APK generado
+        run: |
+          echo "=== APK GENERADO ==="
+          ls -lh app/build/outputs/apk/debug/
+          echo "=== SHA256 ==="
+          sha256sum app/build/outputs/apk/debug/app-debug.apk
+
+      - name: Publicar APK V3
+        uses: actions/upload-artifact@v4
+        with:
+          name: LEADEN1ButtonDiagnosticV3-debug
+          path: app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
